@@ -37,3 +37,47 @@ export async function createBookmark(
 
   return { success: true };
 }
+
+export async function updateBookmark(
+  _prevState: BookmarkState,
+  formData: FormData,
+): Promise<BookmarkState> {
+  const id = String(formData.get("id") ?? "");
+  const title = String(formData.get("title") ?? "").trim();
+  const url = String(formData.get("url") ?? "").trim();
+  const isPublic = formData.get("is_public") === "on";
+
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("bookmarks")
+    .update({ title, url, is_public: isPublic })
+    .eq("id", id);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/dashboard");
+
+  return { success: true };
+}
+
+export async function deleteBookmark(
+  _prevState: BookmarkState,
+  formData: FormData,
+): Promise<BookmarkState> {
+  const id = String(formData.get("id") ?? "");
+
+  const supabase = await createClient();
+
+  const { error } = await supabase.from("bookmarks").delete().eq("id", id);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/dashboard");
+
+  return { success: true };
+}

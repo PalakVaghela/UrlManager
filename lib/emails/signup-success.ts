@@ -22,7 +22,7 @@ export async function sendSignupSuccessEmail({
     html: `
       <h1>Account created successfully</h1>
       <p>Hi @${handle},</p>
-      <p>Your bookmark-app account is ready. You can sign in and start saving your bookmarks.</p>
+      <p>Your Bookmark account is ready. You can sign in and start saving your bookmarks.</p>
     `,
   });
 

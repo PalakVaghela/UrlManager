@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 export type BookmarkState = {
   error?: string;
   success?: boolean;
+  /** Changes on every action completion so client effects always re-run. */
+  nonce?: number;
 };
 
 export async function createBookmark(
@@ -30,12 +32,12 @@ export async function createBookmark(
   });
 
   if (error) {
-    return { error: error.message };
+    return { nonce: Date.now(), error: error.message };
   }
 
   revalidatePath("/dashboard");
 
-  return { success: true };
+  return { success: true, nonce: Date.now() };
 }
 
 export async function updateBookmark(
@@ -55,12 +57,12 @@ export async function updateBookmark(
     .eq("id", id);
 
   if (error) {
-    return { error: error.message };
+    return { nonce: Date.now(), error: error.message };
   }
 
   revalidatePath("/dashboard");
 
-  return { success: true };
+  return { success: true, nonce: Date.now() };
 }
 
 export async function deleteBookmark(
@@ -74,10 +76,10 @@ export async function deleteBookmark(
   const { error } = await supabase.from("bookmarks").delete().eq("id", id);
 
   if (error) {
-    return { error: error.message };
+    return { nonce: Date.now(), error: error.message };
   }
 
   revalidatePath("/dashboard");
 
-  return { success: true };
+  return { success: true, nonce: Date.now() };
 }

@@ -26,7 +26,7 @@ export default function Signup() {
 
   return (
     <div className="relative flex min-h-[90vh] flex-1 items-center justify-center p-6 bg-[#0B0F19] overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -z-10 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-600/10 blur-[140px]" />
+      <div className="absolute top-1/2 left-1/2 -z-10 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-600/10 blur-[140px]"/>
       <div className="w-full max-w-md rounded-2xl border border-gray-800/90 bg-gray-900/40 p-10 backdrop-blur-xl shadow-2xl">
 
         <div className="mb-8 text-center sm:text-left">
@@ -44,7 +44,7 @@ export default function Signup() {
               Email Address
             </label>
             <div className="relative flex items-center">
-              <Mail className="absolute left-4 h-5 w-5 text-gray-400" />
+              <Mail className="absolute left-4 h-5 w-5 text-gray-400"/>
               <input
                 name="email"
                 type="email"
@@ -52,7 +52,7 @@ export default function Signup() {
                 disabled={isPending}
                 placeholder="you@example.com"
                 className="w-full rounded-xl border border-gray-800 bg-gray-950/60 py-3 pl-12 pr-4 text-base text-white placeholder-gray-500 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              />
+/>
             </div>
           </div>
 
@@ -61,15 +61,14 @@ export default function Signup() {
               Password
             </label>
             <div className="relative flex items-center">
-              <Lock className="absolute left-4 h-5 w-5 text-gray-400" />
+              <Lock className="absolute left-4 h-5 w-5 text-gray-400"/>
               <input
                 name="password"
                 type="password"
                 required
                 disabled={isPending}
                 placeholder="••••••••"
-                className="w-full rounded-xl border border-gray-800 bg-gray-950/60 py-3 pl-12 pr-4 text-base text-white placeholder-gray-500 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              />
+                className="w-full rounded-xl border border-gray-800 bg-gray-950/60 py-3 pl-12 pr-4 text-base text-white placeholder-gray-500 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"/>
             </div>
           </div>
 
@@ -78,15 +77,14 @@ export default function Signup() {
               Choose Unique Handle
             </label>
             <div className="relative flex items-center">
-              <AtSign className="absolute left-4 h-5 w-5 text-indigo-400" />
+              <AtSign className="absolute left-4 h-5 w-5 text-indigo-400"/>
               <input
                 name="handle"
                 type="text"
                 required
                 disabled={isPending}
                 placeholder="yourname"
-                className="w-full rounded-xl border border-gray-800 bg-gray-950/60 py-3 pl-12 pr-4 text-base text-white placeholder-gray-500 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono"
-              />
+                className="w-full rounded-xl border border-gray-800 bg-gray-950/60 py-3 pl-12 pr-4 text-base text-white placeholder-gray-500 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono"/>
             </div>
 
             <p className="text-xs text-gray-400 mt-1">
@@ -107,13 +105,13 @@ export default function Signup() {
           >
             {isPending ? (
               <>
-                <Loader2 className="h-5 w-5 animate-spin" />
+                <Loader2 className="h-5 w-5 animate-spin"/>
                 Setting up your vault...
               </>
             ) : (
               <>
                 Create Account
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
+                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5"/>
               </>
             )}
           </button>
@@ -127,8 +125,7 @@ export default function Signup() {
         </div>
 
       </div>
-
-      {toast ? <Toast {...toast} onClose={() => setToast(null)} /> : null}
+      {toast ? <Toast {...toast} onClose={() => setToast(null)}/> : null}
     </div>
   );
 }

@@ -19,9 +19,8 @@ export default function DashboardHeader({ handle }: DashboardHeaderProps) {
   }
 
   return (
-    <header className="flex items-center justify-between border-b border-gray-800/60 bg-gray-900/20 px-6 py-4 backdrop-blur-md">
+    <header className="flex items-center justify-between border-b border-gray-700/80 bg-gray-900/20 px-6 py-4 backdrop-blur-md">
       
-      {/* Left Side: Brand Logo & User Handler */}
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center gap-2">
           <div className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-indigo-500 to-purple-600">
@@ -32,7 +31,6 @@ export default function DashboardHeader({ handle }: DashboardHeaderProps) {
           </h1>
         </div>
 
-        {/* User Handle Meta Display Panel */}
         <div className="flex items-center gap-2 text-sm">
           <span className="font-mono font-semibold text-indigo-400">@{handle}</span>
           <span className="text-gray-700">|</span>
@@ -58,7 +56,6 @@ export default function DashboardHeader({ handle }: DashboardHeaderProps) {
         </div>
       </div>
 
-      {/* Right Side: Log Out Form Action Trigger */}
       <form action={signOut}>
         <button
           type="submit"

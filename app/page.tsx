@@ -7,7 +7,7 @@ import { Lock, Globe, Bookmark, ArrowRight, Sparkles } from "lucide-react";
 export default function Home() {
 
   const previewBookmarks = [
-    { title: "Next.js Architecture Secrets", type: "public", url: "nextjs.org", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
+    { title: "Next.js Architecture Secrets", type: "public", url: "nextjs.org", color: "bg-blue-500/10 text-emerald-400 border-emerald-500/20" },
     { title: "My Secret Side-Project Idea", type: "private", url: "localhost:3000", color: "bg-rose-500/10 text-rose-400 border-rose-500/20" },
     { title: "Tailwind Masterclass Portfolio", type: "public", url: "tailwindcss.com", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
   ];
@@ -21,7 +21,7 @@ export default function Home() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-1.5 text-xs font-medium text-indigo-300 backdrop-blur-md"
+        className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-1.5 text-s font-medium text-indigo-300 backdrop-blur-md"
       >
         <Sparkles className="h-3.5 w-3.5" />
         <span>Now featuring public handles</span>
@@ -34,9 +34,10 @@ export default function Home() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="bg-gradient-to-b from-white via-gray-200 to-gray-500 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-6xl"
         >
-          Save what matters.<br />
+          Save what matters.
+          <br />
           <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-          Share what inspires.
+            Share what inspires.
           </span>
         </motion.h1>
 

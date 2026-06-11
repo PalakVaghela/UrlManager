@@ -24,7 +24,7 @@ export default function DashboardClient({ handle, bookmarks }: DashboardClientPr
   const [editingId, setEditingId] = useState<string | null>(null);
   const [toast, setToast] = useState<ToastData | null>(null);
 
-  // 1. OPTIMISTIC UI STATE: Instantly reflects updates for zero-latency UX
+  // optimistic UI state to manage all things at one place
   const [optimisticBookmarks, setOptimisticBookmarks] = useOptimistic(
     bookmarks,
     (state, { type, payload }: { type: "create" | "delete" | "update"; payload: any }) => {
@@ -41,14 +41,13 @@ export default function DashboardClient({ handle, bookmarks }: DashboardClientPr
     }
   );
 
-  // 2. INLINE MEMOIZED FILTERING: Keeps the logic grouped cleanly
+  // keep logic grouped and reduce re renders
   const filteredBookmarks = useMemo(() => {
     if (filter === "public") return optimisticBookmarks.filter((b) => b.is_public);
     if (filter === "private") return optimisticBookmarks.filter((b) => !b.is_public);
     return optimisticBookmarks;
   }, [optimisticBookmarks, filter]);
 
-  // 3. SERVER ACTION HOOKS
   const [createState, createAction, isCreating] = useActionState(createBookmark, initialState);
   const [updateState, updateAction, isUpdating] = useActionState(updateBookmark, initialState);
   const [deleteState, deleteAction, isDeleting] = useActionState(deleteBookmark, initialState);
@@ -72,43 +71,44 @@ export default function DashboardClient({ handle, bookmarks }: DashboardClientPr
   }, [isDeleting]);
 
   useEffect(() => {
+    if (!createState.nonce) return;
+
     if (createState.success) {
+      setShowForm(false);
       setToast({ type: "success", message: "Bookmark created!" });
+      router.refresh();
     } else if (createState.error) {
       setToast({ type: "error", message: createState.error });
     }
-  }, [createState.success, createState.error]);
+  }, [createState.nonce, createState.success, createState.error, router]);
 
   useEffect(() => {
+    if (!updateState.nonce) return;
+
     if (updateState.success) {
+      setEditingId(null);
       setToast({ type: "success", message: "Bookmark updated!" });
+      router.refresh();
     } else if (updateState.error) {
       setToast({ type: "error", message: updateState.error });
     }
-  }, [updateState.success, updateState.error]);
+  }, [updateState.nonce, updateState.success, updateState.error, router]);
 
   useEffect(() => {
+    if (!deleteState.nonce) return;
+
     if (deleteState.success) {
       setToast({ type: "success", message: "Bookmark deleted!" });
+      router.refresh();
     } else if (deleteState.error) {
       setToast({ type: "error", message: deleteState.error });
     }
-  }, [deleteState.success, deleteState.error]);
-
-  // Consolidated side-effects logic
-  useEffect(() => {
-    if (createState.success) setShowForm(false);
-    if (updateState.success) setEditingId(null);
-    if (createState.success || updateState.success || deleteState.success) {
-      router.refresh();
-    }
-  }, [createState.success, updateState.success, deleteState.success, router]);
+  }, [deleteState.nonce, deleteState.success, deleteState.error, router]);
 
   useEffect(() => {
     if (filter !== "all") setShowForm(false);
   }, [filter]);
 
-  // Dynamic feedback string builder
   const emptyMessage = useMemo(() => {
     if (bookmarks.length === 0) return "No bookmarks yet.";
     if (filter === "public") return "No public bookmarks.";
@@ -129,15 +129,14 @@ export default function DashboardClient({ handle, bookmarks }: DashboardClientPr
     <div className="flex min-h-screen flex-1 flex-col bg-[#0B0F19] text-white">
       <div className="absolute top-0 right-1/4 -z-10 h-[350px] w-[500px] rounded-full bg-indigo-600/5 blur-[120px]" />
       
-      <DashboardHeader handle={handle} />
+      <DashboardHeader handle={handle}/>
 
       <div className="flex flex-1 flex-col md:flex-row gap-6 max-w-full w-full mx-auto px-6 py-6">
-      {/* Left Side: Filter Control Component (Increased size slightly to look better on wide screens) */}
       <div className="w-full md:w-64 shrink-0">
-        <FilterPanel filter={filter} onFilterChange={setFilter} />
+        <FilterPanel filter={filter} onFilterChange={setFilter}/>
       </div>
 
-        <div className="flex flex-1 flex-col p-4 sm:p-6 rounded-2xl border border-gray-800/60 bg-gray-900/10 backdrop-blur-md">
+        <div className="flex flex-1 flex-col p-4 sm:p-6 rounded-2xl border border-gray-700/80 bg-gray-900/10 backdrop-blur-md">
           {filter === "all" && (
             <div className="mb-6">
               <button
@@ -149,12 +148,11 @@ export default function DashboardClient({ handle, bookmarks }: DashboardClientPr
                     : "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-indigo-500/10 hover:opacity-95 active:scale-98"
                 }`}
               >
-                {showForm ? <><X className="h-4 w-4" /> Cancel</> : <><Plus className="h-4 w-4" /> Add Bookmark</>}
+                {showForm ? <><X className="h-4 w-4"/> Cancel</> : <><Plus className="h-4 w-4"/> Add Bookmark</>}
               </button>
 
               {showForm && (
                 <form
-                  key={createState.success ? "reset" : "active"}
                   action={createAction}
                   className="mt-5 flex w-full max-w-lg flex-col gap-5 rounded-2xl border border-gray-800/90 bg-gray-950/50 p-6 shadow-xl"
                 >
@@ -165,36 +163,34 @@ export default function DashboardClient({ handle, bookmarks }: DashboardClientPr
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-semibold text-gray-300 uppercase tracking-wide">Title</label>
                     <div className="relative flex items-center">
-                      <Type className="absolute left-3.5 h-4 w-4 text-gray-500" />
+                      <Type className="absolute left-3.5 h-4 w-4 text-gray-500"/>
                       <input
                         name="title"
                         type="text"
                         required
                         placeholder="e.g., Tailwind CSS Documentation"
-                        className="w-full rounded-xl border border-gray-800 bg-gray-900/40 py-2.5 pl-11 pr-4 text-sm text-white placeholder-gray-600 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                      />
+                        className="w-full rounded-xl border border-gray-800 bg-gray-900/40 py-2.5 pl-11 pr-4 text-sm text-white placeholder-gray-600 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"/>
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-semibold text-gray-300 uppercase tracking-wide">URL</label>
                     <div className="relative flex items-center">
-                      <Link2 className="absolute left-3.5 h-4 w-4 text-gray-500" />
+                      <Link2 className="absolute left-3.5 h-4 w-4 text-gray-500"/>
                       <input
                         name="url"
                         type="url"
                         required
                         placeholder="https://tailwindcss.com"
-                        className="w-full rounded-xl border border-gray-800 bg-gray-900/40 py-2.5 pl-11 pr-4 text-sm text-white placeholder-gray-600 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono"
-                      />
+                        className="w-full rounded-xl border border-gray-800 bg-gray-900/40 py-2.5 pl-11 pr-4 text-sm text-white placeholder-gray-600 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono"/>
                     </div>
                   </div>
 
                   <div className="flex items-center mt-1">
                     <label className="relative flex cursor-pointer items-center gap-3 rounded-xl border border-gray-800 bg-gray-900/20 px-4 py-2.5 transition-colors hover:bg-gray-900/40 select-none">
-                      <input name="is_public" type="checkbox" className="peer sr-only" />
+                      <input name="is_public" type="checkbox" className="peer sr-only"/>
                       <div className="flex h-5 w-5 items-center justify-center rounded-md border border-gray-700 bg-gray-950 text-transparent transition-all peer-checked:border-indigo-500 peer-checked:bg-indigo-500 peer-checked:text-white">
-                        <Globe className="h-3 w-3" />
+                        <Globe className="h-3 w-3"/>
                       </div>
                       <span className="text-sm font-medium text-gray-300 peer-checked:text-white inline-flex items-center gap-1.5">
                         Make public <span className="text-xs font-normal text-gray-500 font-mono">(Visible on your handle)</span>
@@ -230,13 +226,12 @@ export default function DashboardClient({ handle, bookmarks }: DashboardClientPr
               updateAction={updateAction}
               deleteAction={handleDelete}
               updateError={updateState.error}
-              deleteError={deleteState.error}
-            />
+              deleteError={deleteState.error}/>
           </div>
         </div>
       </div>
 
-      {toast ? <Toast {...toast} onClose={() => setToast(null)} /> : null}
+      {toast ? <Toast {...toast} onClose={() => setToast(null)}/> : null}
     </div>
   );
 }

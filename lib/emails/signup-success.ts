@@ -17,7 +17,6 @@ export async function sendSignupSuccessEmail({
   }
 
   try {
-    // 1. Initialize the Gmail SMTP transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {

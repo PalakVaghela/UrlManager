@@ -13,10 +13,13 @@ export default function Home() {
   ];
 
   return (
-    <main className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden bg-[#0B0F19] px-6 text-white selection:bg-indigo-500/30">
-      <div className="absolute top-1/4 left-1/2 -z-10 h-[400px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-600/10 blur-[120px]" />
-      <div className="absolute bottom-10 right-10 -z-10 h-[250px] w-[250px] rounded-full bg-purple-600/10 blur-[80px]" />
+    <main className="relative flex min-h-dvh flex-col items-center justify-start overflow-hidden bg-[#0B0F19] px-6 py-10 text-white selection:bg-indigo-500/30 sm:py-12">
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-1/4 left-1/2 h-[400px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-600/10 blur-[120px]" />
+        <div className="absolute bottom-10 right-10 h-[250px] w-[250px] rounded-full bg-purple-600/10 blur-[80px]" />
+      </div>
 
+      <div className="flex w-full max-w-3xl flex-1 flex-col items-center justify-center">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -71,12 +74,13 @@ export default function Home() {
           Sign In
         </Link>
       </motion.div>
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.4 }}
-        className="mt-16 w-full max-w-2xl rounded-2xl border border-gray-800/80 bg-gray-900/30 p-6 backdrop-blur-xl"
+        className="mt-16 w-full max-w-2xl shrink-0 rounded-2xl border border-gray-800/80 bg-gray-900/30 p-6 backdrop-blur-xl"
       >
         <div className="flex items-center justify-between border-b border-gray-800/60 pb-4">
           <div className="flex gap-1.5">
